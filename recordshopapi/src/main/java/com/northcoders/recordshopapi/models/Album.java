@@ -1,12 +1,17 @@
 package com.northcoders.recordshopapi.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+@Setter
+@Getter
 @Data
 @Entity
-@Table(name = "records")
-public class Record {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "albums")
+public class Album {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,13 +20,17 @@ public class Record {
     @Column(name = "album_name")
     private String albumName;
 
-    @Column(name = "artist")
-    private String artist;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
 
-    @Column(name = "genre")
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
     @Column(name = "release_year")
     private int releaseYear;
+
+    @Column(name = "stock_quantity")
+    private int stockQuantity;
 
 }

@@ -4,5 +4,6 @@ public enum Genre {
     POP,
     ROCK,
     JAZZ,
-    SOUL
+    SOUL,
+    CLASSICAL
 }
