@@ -4,6 +4,8 @@ import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,6 +52,13 @@ public class AlbumServiceImpl implements AlbumService {
 //            album.setStockQuantity(album.getStockQuantity());
             albumRepository.save(album);
             return album;
+    }
+
+    @Override
+    public ResponseEntity<String> deleteById(long id) {
+        albumRepository.deleteById(id);
+
+        return new ResponseEntity<>("Album deleted at id " + id, HttpStatus.ACCEPTED);
     }
 
 

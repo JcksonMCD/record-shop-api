@@ -14,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -119,5 +121,19 @@ class AlbumControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.stockQuantity").value(album.getStockQuantity()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(album.getGenre().toString()));
         verify(albumServiceImpl, times(1)).updateBookById(1L, album);
+    }
+
+    @Test
+    public void testDeleteById() throws Exception {
+
+        when(albumServiceImpl.deleteById(1)).thenReturn(new ResponseEntity<String>("Test passed", HttpStatus.ACCEPTED));
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/album/:1"))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.content().string("Test passed"));
+
+
+        verify(albumServiceImpl, times(1)).deleteById(1);
     }
 }

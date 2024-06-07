@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,5 +79,13 @@ class AlbumServiceImplTest {
 
         assertThat(actualResult).isEqualTo(album);
         verify(albumRepository, times(1)).save(album);
+    }
+
+    @Test
+    void deleteByIdTest(){
+        ResponseEntity<String> result = albumServiceImpl.deleteById(1L);
+
+        verify(albumRepository, times(1)).deleteById(1L);
+        assertThat(result).isEqualTo(new ResponseEntity<String>("Album deleted at id 1", HttpStatus.ACCEPTED));
     }
 }
