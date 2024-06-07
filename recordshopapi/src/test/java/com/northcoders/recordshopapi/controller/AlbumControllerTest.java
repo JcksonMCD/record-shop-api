@@ -101,4 +101,23 @@ class AlbumControllerTest {
                                 .content(mapper.writeValueAsString(album)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+    @Test
+    @DisplayName("PUT /album by Id")
+    void updateAlbumByIdTest() throws Exception {
+        // Arrange
+        Album album = new Album(1L, "name", new Artist(), Genre.POP, 1990, 1);
+
+        when(albumServiceImpl.updateBookById(1L, album)).thenReturn(album);
+
+        // Act & Assert
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.put("/api/v1/album/:1").contentType(MediaType.APPLICATION_JSON).characterEncoding("utf-8").content(mapper.writeValueAsString(album)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.albumName").value(album.getAlbumName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stockQuantity").value(album.getStockQuantity()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(album.getGenre().toString()));
+        verify(albumServiceImpl, times(1)).updateBookById(1L, album);
+    }
 }

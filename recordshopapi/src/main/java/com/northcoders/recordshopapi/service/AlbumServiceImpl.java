@@ -39,4 +39,18 @@ public class AlbumServiceImpl implements AlbumService {
         return album;
     }
 
+    @Override
+    public Album updateBookById(long albumId, Album album) {
+            album.setId(albumId);
+//            album.setGenre(album.getGenre());
+//            album.setAlbumName(album.getAlbumName());
+//            album.setGenre(album.getGenre());
+//            album.setArtist(album.getArtist());
+//            album.setReleaseYear(album.getReleaseYear());
+//            album.setStockQuantity(album.getStockQuantity());
+            albumRepository.save(album);
+            return album;
+    }
+
+
 }

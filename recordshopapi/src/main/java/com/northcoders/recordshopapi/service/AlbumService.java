@@ -11,4 +11,6 @@ public interface AlbumService {
     Album addAlbum(Album album);
 
     Album getAlbumById(long id);
+
+    Album updateBookById(long albumId, Album album);
 }
