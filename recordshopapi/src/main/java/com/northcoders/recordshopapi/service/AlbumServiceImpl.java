@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
@@ -52,16 +53,25 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public Album updateBookById(long albumId, Album album) {
-            album.setId(albumId);
+    public Album updateAlbumById(long albumId, Album updatedAlbum) {
+        Optional<Album> optionalAlbum = albumRepository.findById(albumId);
+        if (optionalAlbum.isPresent()) {
+            Album existingAlbum = optionalAlbum.get();
 
-            if (!artistRepository.existsById(album.getArtist().getId())){
-                artistRepository.save(album.getArtist());
-            }
-            albumRepository.save(album);
-            return album;
+            // Update fields of existing album with values from updated album
+            existingAlbum.setAlbumName(updatedAlbum.getAlbumName());
+            existingAlbum.setArtist(updatedAlbum.getArtist());
+            existingAlbum.setGenre(updatedAlbum.getGenre());
+            existingAlbum.setReleaseYear(updatedAlbum.getReleaseYear());
+            existingAlbum.setStockQuantity(updatedAlbum.getStockQuantity());
+
+            // Save the updated album
+            return albumRepository.save(existingAlbum);
+        } else {
+            // Album with given ID not found
+            throw new ItemNotFoundException("Album not found with id: " + albumId);
+        }
     }
-
     @Override
     public ResponseEntity<String> deleteById(long id) {
         albumRepository.deleteById(id);

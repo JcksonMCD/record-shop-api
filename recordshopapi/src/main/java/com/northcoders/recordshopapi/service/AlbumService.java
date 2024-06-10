@@ -13,7 +13,7 @@ public interface AlbumService {
 
     Album getAlbumById(long id);
 
-    Album updateBookById(long albumId, Album album);
+    Album updateAlbumById(long albumId, Album updatedAlbum);
 
     ResponseEntity<String> deleteById(long id);
 }

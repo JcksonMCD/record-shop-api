@@ -1,9 +1,14 @@
 package com.northcoders.recordshopapi.controller;
 
+import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
+import com.northcoders.recordshopapi.models.Artist;
 import com.northcoders.recordshopapi.service.AlbumService;
 import com.northcoders.recordshopapi.service.AlbumServiceImpl;
+import com.northcoders.recordshopapi.service.ArtistService;
+import com.northcoders.recordshopapi.service.ArtistServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +22,15 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private ArtistService artistService;
+
     @GetMapping
     public ResponseEntity<List<Album>> getAllAlbums() {
         return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
     }
 
-    @GetMapping("/:{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
         Album album = albumService.getAlbumById(id);
         return new ResponseEntity<>(album, HttpStatus.OK);
@@ -33,21 +41,34 @@ public class AlbumController {
         return new ResponseEntity<>(albumService.addAlbum(album), HttpStatus.CREATED);
     }
 
-    @PutMapping("/:{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Album> updateAlbumById(
-            @PathVariable long id,
-            @RequestBody Album album
+            @PathVariable("id") long albumId,
+            @RequestBody Album updatedAlbum
     ){
-        return new ResponseEntity<>(albumService.updateBookById(id, album), HttpStatus.OK);
+        try {
+            Album updated = albumService.updateAlbumById(albumId, updatedAlbum);
+            if(updated == null) {
+                return ResponseEntity.notFound().build(); // Album not found
+            }
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Internal server error
+        }
     }
 
-    @DeleteMapping("/:{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAlbumById(@PathVariable long id){
         return albumService.deleteById(id);
     }
 
+    @GetMapping("/artist")
+    public ResponseEntity<List<Album>> findAlbumsByArtist(@RequestParam String artistName) {
+        List<Album> albums = artistService.getAllAlbumsByArtist(artistName);
+        return new ResponseEntity<>(albums, HttpStatus.OK);
+    }
+
     /*
-    list all albums by a given artist
     list all albums by a given release year
     list all albums by a given genre
     get album information by album name

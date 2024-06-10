@@ -1,5 +1,6 @@
 package com.northcoders.recordshopapi.service;
 
+import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.models.Artist;
 import com.northcoders.recordshopapi.models.Genre;
@@ -130,15 +131,42 @@ class AlbumServiceImplTest {
     }
 
     @Test
-    void updateAlbumByIdTest(){
-        Album album = new Album(2L, "name2", new Artist(), Genre.ROCK, 1999, 12);
+    public void updateAlbumById_AlbumExists() {
+        // Arrange
+        Album existingAlbum = new Album(1L, "old name", new Artist(1L, "old artist", null), Genre.POP, 1980, 5);
+        Album updatedAlbum = new Album(1L, "new name", new Artist(2L, "new artist", null), Genre.ROCK, 1990, 10);
 
-        when(albumRepository.save(album)).thenReturn(album);
+        when(albumRepository.findById(1L)).thenReturn(Optional.of(existingAlbum));
+        when(albumRepository.save(any(Album.class))).thenReturn(updatedAlbum);
 
-        Album actualResult = albumServiceImpl.updateBookById(2L, album);
+        // Act
+        Album result = albumServiceImpl.updateAlbumById(1L, updatedAlbum);
 
-        assertThat(actualResult).isEqualTo(album);
-        verify(albumRepository, times(1)).save(album);
+        // Assert
+        assertEquals("new name", result.getAlbumName());
+        assertEquals("new artist", result.getArtist().getName());
+        assertEquals(Genre.ROCK, result.getGenre());
+        assertEquals(1990, result.getReleaseYear());
+        assertEquals(10, result.getStockQuantity());
+
+        verify(albumRepository, times(1)).findById(1L);
+        verify(albumRepository, times(1)).save(existingAlbum);
+    }
+
+    @Test
+    public void updateAlbumById_AlbumNotExists() {
+        // Arrange
+        Album updatedAlbum = new Album(1L, "new name", new Artist(2L, "new artist", null), Genre.ROCK, 1990, 10);
+
+        when(albumRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ItemNotFoundException.class, () -> {
+            albumServiceImpl.updateAlbumById(1L, updatedAlbum);
+        });
+
+        verify(albumRepository, times(1)).findById(1L);
+        verify(albumRepository, never()).save(any(Album.class));
     }
 
     @Test
