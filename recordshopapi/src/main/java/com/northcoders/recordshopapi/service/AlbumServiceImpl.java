@@ -36,14 +36,16 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public Album addAlbum(Album album) {
-        Artist albumArtist = artistRepository.findByName(album.getArtist().getName());
+    public Album addAlbum(Album album) {    Artist albumArtist = artistRepository.findByName(album.getArtist().getName());
         if (albumArtist == null) {
             artistRepository.save(album.getArtist());
+            albumRepository.save(album);
         } else {
             album.setArtist(albumArtist);
             if (albumRepository.findByAlbumName(album.getAlbumName()) == null) {
                 albumRepository.save(album);
+            } else {
+                return null;
             }
         }
         return album;

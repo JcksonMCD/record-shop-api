@@ -4,12 +4,14 @@ import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.models.Artist;
 import com.northcoders.recordshopapi.models.Genre;
 import com.northcoders.recordshopapi.repository.AlbumRepository;
+import com.northcoders.recordshopapi.repository.ArtistRepository;
 import lombok.Data;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -21,11 +23,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@DataJpaTest
+@SpringBootTest
 class AlbumServiceImplTest {
 
     @Mock
     AlbumRepository albumRepository;
+
+    @Mock
+    ArtistRepository artistRepository;
 
     @InjectMocks
     AlbumServiceImpl albumServiceImpl;
@@ -58,15 +63,70 @@ class AlbumServiceImplTest {
     }
 
     @Test
-    void addAlbumTest(){
-        Album album = new Album(2L, "name2", new Artist(), Genre.ROCK, 1999, 12);
+    void testAddAlbum_NewArtist() {
+        // Arrange
+        Album album = new Album();
+        album.setAlbumName("Test Album");
+        Artist artist = new Artist();
+        artist.setName("Test Artist");
+        album.setArtist(artist);
 
-        when(albumRepository.save(album)).thenReturn(album);
+        when(artistRepository.findByName("Test Artist")).thenReturn(null);
+        when(albumRepository.findByAlbumName("Test Album")).thenReturn(null);
 
-        Album actualResult = albumServiceImpl.addAlbum(album);
+        // Act
+        Album addedAlbum = albumServiceImpl.addAlbum(album);
 
-        assertThat(actualResult).isEqualTo(album);
+        // Assert
+        assertNotNull(addedAlbum);
+        assertEquals("Test Album", addedAlbum.getAlbumName());
+        assertEquals("Test Artist", addedAlbum.getArtist().getName());
+        verify(artistRepository, times(1)).save(artist);
         verify(albumRepository, times(1)).save(album);
+    }
+
+    @Test
+    void testAddAlbum_ExistingArtist() {
+        // Arrange
+        Album album = new Album();
+        album.setAlbumName("Test Album");
+        Artist artist = new Artist();
+        artist.setName("Test Artist");
+        album.setArtist(artist);
+
+        when(artistRepository.findByName("Test Artist")).thenReturn(artist);
+        when(albumRepository.findByAlbumName("Test Album")).thenReturn(null);
+
+        // Act
+        Album addedAlbum = albumServiceImpl.addAlbum(album);
+
+        // Assert
+        assertNotNull(addedAlbum);
+        assertEquals("Test Album", addedAlbum.getAlbumName());
+        assertEquals("Test Artist", addedAlbum.getArtist().getName());
+        verify(artistRepository, never()).save(artist);
+        verify(albumRepository, times(1)).save(album);
+    }
+
+    @Test
+    void testAddAlbum_AlbumExists() {
+        // Arrange
+        Album album = new Album();
+        album.setAlbumName("Test Album");
+        Artist artist = new Artist();
+        artist.setName("Test Artist");
+        album.setArtist(artist);
+
+        when(artistRepository.findByName("Test Artist")).thenReturn(artist);
+        when(albumRepository.findByAlbumName("Test Album")).thenReturn(album);
+
+        // Act
+        Album addedAlbum = albumServiceImpl.addAlbum(album);
+
+        // Assert
+        assertNull(addedAlbum);
+        verify(artistRepository, never()).save(artist);
+        verify(albumRepository, never()).save(album);
     }
 
     @Test
