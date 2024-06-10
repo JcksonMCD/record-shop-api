@@ -1,17 +1,20 @@
 package com.northcoders.recordshopapi.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Setter
 @Getter
-@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "artists")
+//@Table(name = "artists")
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +23,8 @@ public class Artist {
     @Column(name = "artist_name")
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "album_name")
-    private List<Album> albums;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "artist")
+    private Set<Album> albums;
 
-    public void setAlbumName(List<Album> albums) {
-        this.albums = albums;
-    }
 }

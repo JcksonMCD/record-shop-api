@@ -2,25 +2,25 @@ package com.northcoders.recordshopapi.service;
 
 import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
+import com.northcoders.recordshopapi.models.Artist;
 import com.northcoders.recordshopapi.repository.AlbumRepository;
+import com.northcoders.recordshopapi.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import com.northcoders.recordshopapi.repository.AlbumRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
 
     @Autowired
     AlbumRepository albumRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
 
     @Override
     public List<Album> getAllAlbums() {
@@ -37,19 +37,25 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public Album addAlbum(Album album) {
-        albumRepository.save(album);
+        Artist albumArtist = artistRepository.findByName(album.getArtist().getName());
+        if (albumArtist == null) {
+            artistRepository.save(album.getArtist());
+        } else {
+            album.setArtist(albumArtist);
+            if (albumRepository.findByAlbumName(album.getAlbumName()) == null) {
+                albumRepository.save(album);
+            }
+        }
         return album;
     }
 
     @Override
     public Album updateBookById(long albumId, Album album) {
             album.setId(albumId);
-//            album.setGenre(album.getGenre());
-//            album.setAlbumName(album.getAlbumName());
-//            album.setGenre(album.getGenre());
-//            album.setArtist(album.getArtist());
-//            album.setReleaseYear(album.getReleaseYear());
-//            album.setStockQuantity(album.getStockQuantity());
+
+            if (!artistRepository.existsById(album.getArtist().getId())){
+                artistRepository.save(album.getArtist());
+            }
             albumRepository.save(album);
             return album;
     }

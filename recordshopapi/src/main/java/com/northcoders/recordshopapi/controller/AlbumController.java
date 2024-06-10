@@ -45,4 +45,11 @@ public class AlbumController {
     public ResponseEntity<String> deleteAlbumById(@PathVariable long id){
         return albumService.deleteById(id);
     }
+
+    /*
+    list all albums by a given artist
+    list all albums by a given release year
+    list all albums by a given genre
+    get album information by album name
+     */
 }
