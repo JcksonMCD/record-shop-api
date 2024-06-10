@@ -187,4 +187,23 @@ class AlbumControllerTest {
 
         verify(albumServiceImpl, times(1)).findAllByReleaseYear(2000);
     }
+
+    @Test
+    @DisplayName("GET /album/genre/{genre}")
+    void getAlbumsByGenreTest() throws Exception {
+        // Arrange
+        Album album1 = new Album(1L, "Album1", null, Genre.POP, 2000, 10);
+        Album album2 = new Album(2L, "Album2", null, Genre.POP, 2005, 15);
+        List<Album> albums = Arrays.asList(album1, album2);
+
+        when(albumServiceImpl.findAllByGenre(Genre.POP)).thenReturn(albums);
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/album/genre/POP")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].albumName").value("Album1"))
+                .andExpect(jsonPath("$[1].albumName").value("Album2"));
+    }
 }

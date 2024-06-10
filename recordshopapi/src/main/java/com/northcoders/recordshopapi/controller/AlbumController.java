@@ -3,6 +3,7 @@ package com.northcoders.recordshopapi.controller;
 import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.models.Artist;
+import com.northcoders.recordshopapi.models.Genre;
 import com.northcoders.recordshopapi.service.AlbumService;
 import com.northcoders.recordshopapi.service.AlbumServiceImpl;
 import com.northcoders.recordshopapi.service.ArtistService;
@@ -74,8 +75,13 @@ public class AlbumController {
         return ResponseEntity.ok(albums);
     }
 
+    @GetMapping("/genre/{genre}")
+    public ResponseEntity<List<Album>> getAlbumsByGenre(@PathVariable Genre genre) {
+        List<Album> albums = albumService.findAllByGenre(genre);
+        return ResponseEntity.ok(albums);
+    }
+
     /*
-    list all albums by a given genre
     get album information by album name
      */
 }

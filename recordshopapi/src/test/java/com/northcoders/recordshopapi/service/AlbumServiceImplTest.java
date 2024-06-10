@@ -194,4 +194,22 @@ class AlbumServiceImplTest {
         assertEquals(2, result.size());
         verify(albumRepository, times(1)).findAllByReleaseYear(2000);
     }
+
+    @Test
+    void findAllByGenreTest() {
+        // Arrange
+        Album album1 = new Album(1L, "Album1", null, Genre.POP, 2000, 10);
+        Album album2 = new Album(2L, "Album2", null, Genre.POP, 2005, 15);
+        List<Album> albums = Arrays.asList(album1, album2);
+
+        when(albumRepository.findByGenre(Genre.POP)).thenReturn(albums);
+
+        // Act
+        List<Album> result = albumServiceImpl.findAllByGenre(Genre.POP);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals("Album1", result.get(0).getAlbumName());
+        assertEquals("Album2", result.get(1).getAlbumName());
+    }
 }

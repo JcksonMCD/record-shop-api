@@ -3,6 +3,7 @@ package com.northcoders.recordshopapi.service;
 import com.northcoders.recordshopapi.exception.ItemNotFoundException;
 import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.models.Artist;
+import com.northcoders.recordshopapi.models.Genre;
 import com.northcoders.recordshopapi.repository.AlbumRepository;
 import com.northcoders.recordshopapi.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,11 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public List<Album> findAllByReleaseYear(int releaseYear) {
         return albumRepository.findAllByReleaseYear(releaseYear);
+    }
+
+    @Override
+    public List<Album> findAllByGenre(Genre genre) {
+        return albumRepository.findByGenre(genre);
     }
 
 

@@ -2,6 +2,7 @@ package com.northcoders.recordshopapi.repository;
 
 import com.northcoders.recordshopapi.models.Album;
 import com.northcoders.recordshopapi.models.Artist;
+import com.northcoders.recordshopapi.models.Genre;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,6 @@ public interface AlbumRepository extends CrudRepository<Album, Long> {
     List<Album> findByArtist(Artist artist);
 
     List<Album> findAllByReleaseYear(int releaseYear);
+
+    List<Album> findByGenre(Genre genre);
 }

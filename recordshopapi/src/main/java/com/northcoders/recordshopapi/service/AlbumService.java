@@ -1,6 +1,7 @@
 package com.northcoders.recordshopapi.service;
 
 import com.northcoders.recordshopapi.models.Album;
+import com.northcoders.recordshopapi.models.Genre;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,4 +19,6 @@ public interface AlbumService {
     ResponseEntity<String> deleteById(long id);
 
     List<Album> findAllByReleaseYear(int releaseYear);
+
+    List<Album> findAllByGenre(Genre genre);
 }
