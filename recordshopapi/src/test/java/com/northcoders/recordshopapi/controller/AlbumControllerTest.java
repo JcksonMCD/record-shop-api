@@ -206,4 +206,20 @@ class AlbumControllerTest {
                 .andExpect(jsonPath("$[0].albumName").value("Album1"))
                 .andExpect(jsonPath("$[1].albumName").value("Album2"));
     }
+
+    @Test
+    @DisplayName("GET /album/name/{albumName}")
+    void getAlbumByNameTest() throws Exception {
+        // Arrange
+        Album album = new Album(1L, "Album1", null, Genre.POP, 2000, 10);
+
+        when(albumServiceImpl.findByAlbumName("Album1")).thenReturn(album);
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/album/name/Album1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.albumName").value("Album1"))
+                .andExpect(jsonPath("$.releaseYear").value(2000));
+    }
 }

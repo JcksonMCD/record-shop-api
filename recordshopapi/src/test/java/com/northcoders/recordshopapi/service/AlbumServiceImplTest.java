@@ -212,4 +212,18 @@ class AlbumServiceImplTest {
         assertEquals("Album1", result.get(0).getAlbumName());
         assertEquals("Album2", result.get(1).getAlbumName());
     }
+
+    @Test
+    void findByAlbumNameTest() {
+        // Arrange
+        Album album = new Album(1L, "Album1", null, Genre.POP, 2000, 10);
+
+        when(albumRepository.findByAlbumName("Album1")).thenReturn(album);
+
+        // Act
+        Album result = albumServiceImpl.findByAlbumName("Album1");
+
+        // Assert
+        assertEquals("Album1", result.getAlbumName());
+    }
 }

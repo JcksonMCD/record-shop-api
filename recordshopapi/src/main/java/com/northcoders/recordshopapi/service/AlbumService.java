@@ -21,4 +21,6 @@ public interface AlbumService {
     List<Album> findAllByReleaseYear(int releaseYear);
 
     List<Album> findAllByGenre(Genre genre);
+
+    Album findByAlbumName(String albumName);
 }

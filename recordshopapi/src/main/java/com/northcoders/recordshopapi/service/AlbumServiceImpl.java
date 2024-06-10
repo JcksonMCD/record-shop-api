@@ -89,6 +89,9 @@ public class AlbumServiceImpl implements AlbumService {
     public List<Album> findAllByGenre(Genre genre) {
         return albumRepository.findByGenre(genre);
     }
+    public Album findByAlbumName(String albumName) {
+        return albumRepository.findByAlbumName(albumName);
+    }
 
 
 }

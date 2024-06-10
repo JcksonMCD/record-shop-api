@@ -81,7 +81,9 @@ public class AlbumController {
         return ResponseEntity.ok(albums);
     }
 
-    /*
-    get album information by album name
-     */
+    @GetMapping("/name/{albumName}")
+    public ResponseEntity<Album> getAlbumByName(@PathVariable String albumName) {
+        Album album = albumService.findByAlbumName(albumName);
+        return ResponseEntity.ok(album);
+    }
 }
