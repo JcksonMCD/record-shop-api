@@ -68,8 +68,13 @@ public class AlbumController {
         return new ResponseEntity<>(albums, HttpStatus.OK);
     }
 
+    @GetMapping("/year/{releaseYear}")
+    public ResponseEntity<List<Album>> getAlbumsByReleaseYear(@PathVariable int releaseYear) {
+        List<Album> albums = albumService.findAllByReleaseYear(releaseYear);
+        return ResponseEntity.ok(albums);
+    }
+
     /*
-    list all albums by a given release year
     list all albums by a given genre
     get album information by album name
      */

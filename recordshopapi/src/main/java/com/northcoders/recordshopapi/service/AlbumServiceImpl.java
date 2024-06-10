@@ -79,5 +79,10 @@ public class AlbumServiceImpl implements AlbumService {
         return new ResponseEntity<>("Album deleted at id " + id, HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public List<Album> findAllByReleaseYear(int releaseYear) {
+        return albumRepository.findAllByReleaseYear(releaseYear);
+    }
+
 
 }

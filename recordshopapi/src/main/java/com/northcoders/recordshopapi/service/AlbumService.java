@@ -16,4 +16,6 @@ public interface AlbumService {
     Album updateAlbumById(long albumId, Album updatedAlbum);
 
     ResponseEntity<String> deleteById(long id);
+
+    List<Album> findAllByReleaseYear(int releaseYear);
 }

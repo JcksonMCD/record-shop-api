@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -175,5 +176,22 @@ class AlbumServiceImplTest {
 
         verify(albumRepository, times(1)).deleteById(1L);
         assertThat(result).isEqualTo(new ResponseEntity<String>("Album deleted at id 1", HttpStatus.ACCEPTED));
+    }
+
+    @Test
+    public void findAllByReleaseYear() {
+        // Arrange
+        Album album1 = new Album(1L, "Album1", null, Genre.POP, 2000, 10);
+        Album album2 = new Album(2L, "Album2", null, Genre.ROCK, 2000, 15);
+        List<Album> albums = Arrays.asList(album1, album2);
+
+        when(albumRepository.findAllByReleaseYear(2000)).thenReturn(albums);
+
+        // Act
+        List<Album> result = albumServiceImpl.findAllByReleaseYear(2000);
+
+        // Assert
+        assertEquals(2, result.size());
+        verify(albumRepository, times(1)).findAllByReleaseYear(2000);
     }
 }
