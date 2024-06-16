@@ -3,9 +3,7 @@ package com.northcoders.recordshopapi.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -14,7 +12,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "artists")
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +21,7 @@ public class Artist {
     private String name;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "artist")
-    private Set<Album> albums;
-
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Album> albums = new HashSet<>();
 }
+

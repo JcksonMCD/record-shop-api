@@ -1,6 +1,6 @@
 package com.northcoders.recordshopapi.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "albums")
 public class Album {
 
     @Id
@@ -21,6 +20,7 @@ public class Album {
     private String albumName;
 
     @ManyToOne
+    @JoinColumn(name = "artist_id")
     private Artist artist;
 
     @Enumerated(EnumType.STRING)
@@ -31,5 +31,4 @@ public class Album {
 
     @Column(name = "stock_quantity")
     private int stockQuantity;
-
 }

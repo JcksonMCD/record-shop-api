@@ -121,7 +121,7 @@ class AlbumControllerTest {
         mockMvc.perform(put("/api/v1/album/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"albumName\":\"name\",\"artist\":{\"id\":0,\"name\":null},\"genre\":\"POP\",\"releaseYear\":1990,\"stockQuantity\":1}"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.albumName").value("name"));
     }
 

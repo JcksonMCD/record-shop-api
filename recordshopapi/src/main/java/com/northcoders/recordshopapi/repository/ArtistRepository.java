@@ -1,11 +1,9 @@
 package com.northcoders.recordshopapi.repository;
 
 import com.northcoders.recordshopapi.models.Artist;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface ArtistRepository extends CrudRepository<Artist, Long> {
-
+public interface ArtistRepository extends JpaRepository<Artist, Long> {
     Artist findByName(String name);
 }
+

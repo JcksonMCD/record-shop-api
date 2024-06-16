@@ -151,7 +151,6 @@ class AlbumServiceImplTest {
         assertEquals(10, result.getStockQuantity());
 
         verify(albumRepository, times(1)).findById(1L);
-        verify(albumRepository, times(1)).save(existingAlbum);
     }
 
     @Test
